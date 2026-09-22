@@ -14,9 +14,10 @@ import { BottomNav, type AppTab } from "@/components/bottom-nav"
 import { AddressSheet } from "@/components/address-sheet"
 import { NotificationDrawer } from "@/components/notification-drawer"
 import { ProfileView } from "@/components/profile-view"
+import { SellerDashboard } from "@/components/seller-dashboard"
 import { type CategoryId, categories, foods } from "@/lib/data"
 
-function BazarApp() {
+function BuyerApp() {
   const [query, setQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState<CategoryId | "all">("all")
   const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null)
@@ -60,6 +61,11 @@ function BazarApp() {
       <BottomNav active={tab} onChange={changeTab} />
     </div>
   )
+}
+
+function BazarApp() {
+  const { activeMode } = useApp()
+  return activeMode === "seller" ? <SellerDashboard /> : <BuyerApp />
 }
 
 export default function Page() {

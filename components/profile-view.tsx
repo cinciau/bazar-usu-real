@@ -15,6 +15,7 @@ import {
   Phone,
   Settings,
   Ticket,
+  Store,
 } from "lucide-react"
 import { useApp } from "@/components/app-provider"
 import { UserAvatar } from "@/components/user-avatar"
@@ -30,8 +31,11 @@ const menuItems = [
 ]
 
 export function ProfileView() {
-  const { isLoggedIn, user, login, logout } = useApp()
+  const { isLoggedIn, user, login, logout, becomeSeller, switchMode, isSeller } = useApp()
   const [editOpen, setEditOpen] = useState(false)
+  const [sellerOpen, setSellerOpen] = useState(false)
+  const [registerOpen, setRegisterOpen] = useState(false)
+  const [storeName, setStoreName] = useState("Warung USU")
 
   if (!isLoggedIn) {
     return (
@@ -134,6 +138,8 @@ export function ProfileView() {
         })}
       </ul>
 
+      <button type="button" onClick={() => { if (isSeller) switchMode("seller"); else setSellerOpen(true) }} className="mt-4 flex w-full items-center gap-3 rounded-2xl border border-[#d9c36a] bg-[#fff9e8] px-4 py-3.5 text-left transition-colors hover:bg-[#fff3c4]"><span className="flex size-9 items-center justify-center rounded-xl bg-[#f4d77b] text-[#416b3e]"><Store className="size-4.5" /></span><span className="flex-1"><span className="block text-sm font-bold text-[#416b3e]">Beralih ke Akun Penjual</span><span className="mt-0.5 block text-xs text-[#6b7d6d]">Kelola toko dan pesananmu</span></span><ChevronRight className="size-4 text-[#416b3e]" /></button>
+
       <button
         type="button"
         onClick={logout}
@@ -148,6 +154,8 @@ export function ProfileView() {
       </p>
 
       <EditProfileModal open={editOpen} onClose={() => setEditOpen(false)} />
+      {sellerOpen && <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"><div className="w-full max-w-md rounded-3xl bg-white p-5 shadow-xl"><h2 className="text-xl font-extrabold text-[#253c29]">Beralih ke Akun Penjual?</h2><p className="mt-2 text-sm leading-relaxed text-[#6b7d6d]">Kelola produk, pesanan, dan toko kamu melalui Dashboard Penjual.</p><div className="mt-5 flex gap-3"><button type="button" onClick={() => setSellerOpen(false)} className="flex-1 rounded-2xl border border-border py-3 text-sm font-bold text-muted-foreground">Batal</button><button type="button" onClick={() => { setSellerOpen(false); setRegisterOpen(true) }} className="flex-1 rounded-2xl bg-[#416b3e] py-3 text-sm font-bold text-white">Beralih</button></div></div></div>}
+      {registerOpen && <div className="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-black/40 p-4 sm:items-center"><form onSubmit={(event) => { event.preventDefault(); becomeSeller(storeName); setRegisterOpen(false) }} className="w-full max-w-md rounded-3xl bg-white p-5 shadow-xl"><h2 className="text-xl font-extrabold text-[#253c29]">Mulai Berjualan di Bazar USU</h2><p className="mt-2 text-sm text-[#6b7d6d]">Jual makanan, minuman, dan produkmu kepada mahasiswa dengan mudah.</p><div className="mt-5 space-y-3">{["Nama Toko", "Nama Pemilik", "Nomor HP", "Alamat Toko", "Deskripsi Toko"].map((label, index) => <input key={label} required={index < 2} value={index === 0 ? storeName : undefined} onChange={index === 0 ? (event) => setStoreName(event.target.value) : undefined} placeholder={label} className="w-full rounded-2xl border border-border px-4 py-3 text-sm outline-none focus:border-[#416b3e]" />)}</div><div className="mt-5 flex gap-3"><button type="button" onClick={() => setRegisterOpen(false)} className="flex-1 rounded-2xl border border-border py-3 text-sm font-bold text-muted-foreground">Batal</button><button type="submit" className="flex-1 rounded-2xl bg-[#416b3e] py-3 text-sm font-bold text-white">Daftar Sebagai Penjual</button></div></form></div>}
     </div>
   )
 }

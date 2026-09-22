@@ -34,6 +34,10 @@ type AppContextValue = {
   notifications: AppNotification[]
   unreadCount: number
   markAllRead: () => void
+  activeMode: "buyer" | "seller"
+  isSeller: boolean
+  switchMode: (mode: "buyer" | "seller") => void
+  becomeSeller: (storeName: string) => void
 }
 
 const AppContext = createContext<AppContextValue | null>(null)
@@ -41,6 +45,8 @@ const AppContext = createContext<AppContextValue | null>(null)
 export function AppProvider({ children }: { children: ReactNode }) {
   const [isLoggedIn, setIsLoggedIn] = useState(true)
   const [user, setUser] = useState<UserProfile>(defaultUser)
+  const [activeMode, setActiveMode] = useState<"buyer" | "seller">("buyer")
+  const [isSeller, setIsSeller] = useState(false)
 
   const [addresses, setAddresses] = useState<SavedAddress[]>(defaultAddresses)
   const [activeAddressId, setActiveAddressId] = useState<string>(
@@ -66,6 +72,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const markAllRead = useCallback(() => {
     setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })))
   }, [])
+  const switchMode = useCallback((mode: "buyer" | "seller") => {
+    if (mode === "seller" && !isSeller) return
+    setActiveMode(mode)
+  }, [isSeller])
+  const becomeSeller = useCallback((storeName: string) => {
+    setIsSeller(true)
+    setActiveMode("seller")
+    setUser((prev) => ({ ...prev, name: storeName }))
+  }, [])
 
   const value = useMemo<AppContextValue>(() => {
     const activeAddress =
@@ -85,6 +100,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
       notifications,
       unreadCount,
       markAllRead,
+      activeMode,
+      isSeller,
+      switchMode,
+      becomeSeller,
     }
   }, [
     isLoggedIn,
@@ -97,6 +116,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     addAddress,
     notifications,
     markAllRead,
+    activeMode,
+    isSeller,
+    switchMode,
+    becomeSeller,
   ])
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>
