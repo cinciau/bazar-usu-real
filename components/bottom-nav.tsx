@@ -1,15 +1,15 @@
 "use client"
 
-import { Bell, Home, Receipt, User } from "lucide-react"
+import { Home, Search, ShoppingBag, User } from "lucide-react"
 import { useApp } from "@/components/app-provider"
 import { cn } from "@/lib/utils"
 
-export type AppTab = "home" | "orders" | "notifications" | "profile"
+export type AppTab = "home" | "search" | "cart" | "profile"
 
 const tabs: { id: AppTab; label: string; icon: typeof Home }[] = [
   { id: "home", label: "Beranda", icon: Home },
-  { id: "orders", label: "Pesanan", icon: Receipt },
-  { id: "notifications", label: "Notifikasi", icon: Bell },
+  { id: "search", label: "Pencarian", icon: Search },
+  { id: "cart", label: "Keranjang", icon: ShoppingBag },
   { id: "profile", label: "Profil", icon: User },
 ]
 
@@ -49,7 +49,7 @@ export function BottomNav({
                     className={cn("size-6", isActive && "fill-primary/15")}
                     strokeWidth={isActive ? 2.4 : 2}
                   />
-                  {tab.id === "notifications" && unreadCount > 0 && (
+                  {tab.id === "cart" && unreadCount > 0 && (
                     <span className="absolute -right-2 -top-1.5 flex min-w-4 items-center justify-center rounded-full border-2 border-background bg-destructive px-0.5 text-[9px] font-bold leading-none text-white">
                       {unreadCount}
                     </span>

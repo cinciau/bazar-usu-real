@@ -1,7 +1,7 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { type CategoryId, categories, foods } from "@/lib/data"
+import { AppProvider, useApp } from "@/components/app-provider"
 import { CartProvider } from "@/components/cart-provider"
 import { SiteHeader } from "@/components/site-header"
 import { MysteryBoxBanner } from "@/components/mystery-box-banner"
@@ -10,61 +10,58 @@ import { FoodGrid } from "@/components/food-grid"
 import { FoodDetailModal } from "@/components/food-detail-modal"
 import { CartDrawer } from "@/components/cart-drawer"
 import { FloatingCart } from "@/components/floating-cart"
+import { BottomNav, type AppTab } from "@/components/bottom-nav"
+import { AddressSheet } from "@/components/address-sheet"
+import { NotificationDrawer } from "@/components/notification-drawer"
+import { ProfileView } from "@/components/profile-view"
+import { type CategoryId, categories, foods } from "@/lib/data"
 
-export default function Page() {
+function BazarApp() {
   const [query, setQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState<CategoryId | "all">("all")
   const [selectedFoodId, setSelectedFoodId] = useState<string | null>(null)
   const [cartOpen, setCartOpen] = useState(false)
+  const [addressOpen, setAddressOpen] = useState(false)
+  const [notificationOpen, setNotificationOpen] = useState(false)
+  const [tab, setTab] = useState<AppTab>("home")
+  const { activeAddress } = useApp()
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return foods.filter((f) => {
-      const matchCategory =
-        activeCategory === "all" || f.categories.includes(activeCategory)
-      const matchQuery =
-        !q ||
-        f.name.toLowerCase().includes(q) ||
-        f.restaurant.toLowerCase().includes(q) ||
-        f.cuisine.toLowerCase().includes(q)
-      return matchCategory && matchQuery
-    })
+    return foods.filter((f) => (activeCategory === "all" || f.categories.includes(activeCategory)) && (!q || `${f.name} ${f.restaurant} ${f.cuisine}`.toLowerCase().includes(q)))
   }, [query, activeCategory])
+  const selectedFood = foods.find((f) => f.id === selectedFoodId) ?? null
+  const heading = query.trim() ? `Hasil untuk "${query.trim()}"` : activeCategory === "all" ? "Rekomendasi Untukmu" : categories.find((c) => c.id === activeCategory)?.label ?? "Menu"
 
-  const heading = useMemo(() => {
-    if (query.trim()) return `Hasil untuk "${query.trim()}"`
-    if (activeCategory === "all") return "Rekomendasi Untukmu"
-    return categories.find((c) => c.id === activeCategory)?.label ?? "Menu"
-  }, [query, activeCategory])
-
-  const selectedFood = useMemo(
-    () => foods.find((f) => f.id === selectedFoodId) ?? null,
-    [selectedFoodId],
-  )
+  const changeTab = (next: AppTab) => {
+    setTab(next)
+    if (next === "cart") setCartOpen(true)
+    if (next === "search") document.querySelector<HTMLInputElement>("input[aria-label='Cari makanan atau restoran']")?.focus()
+  }
 
   return (
-    <CartProvider>
-      <div className="min-h-dvh bg-background pb-24">
-        <SiteHeader
-          query={query}
-          onQueryChange={setQuery}
-          onCartOpen={() => setCartOpen(true)}
-          onSelectFood={setSelectedFoodId}
-        />
-
-        {!query.trim() && activeCategory === "all" && <MysteryBoxBanner />}
-
-        <CategoryPills active={activeCategory} onChange={setActiveCategory} />
-
-        <FoodGrid foods={filtered} heading={heading} onOpen={setSelectedFoodId} />
-
-        <FoodDetailModal
-          food={selectedFood}
-          onClose={() => setSelectedFoodId(null)}
-        />
-        <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
-        <FloatingCart onOpen={() => setCartOpen(true)} />
+    <div className="min-h-dvh bg-background pb-24">
+      <SiteHeader query={query} onQueryChange={setQuery} onCartOpen={() => setCartOpen(true)} onSelectFood={setSelectedFoodId} onAddressOpen={() => setAddressOpen(true)} onNotificationsOpen={() => setNotificationOpen(true)} onProfileOpen={() => setTab("profile")} />
+      <div className="mx-auto max-w-md md:max-w-7xl">
+        {tab === "profile" ? <ProfileView /> : (
+          <>
+            <button type="button" onClick={() => setAddressOpen(true)} className="mx-4 mt-3 flex items-center gap-2 rounded-xl bg-[#f8eac8] px-3 py-2 text-left text-xs font-semibold text-[#416b3e] md:hidden">📍 Antar ke: <span className="truncate">{activeAddress.detail}</span></button>
+            {!query.trim() && activeCategory === "all" && <MysteryBoxBanner />}
+            <CategoryPills active={activeCategory} onChange={setActiveCategory} />
+            <FoodGrid foods={filtered} heading={heading} onOpen={setSelectedFoodId} />
+          </>
+        )}
       </div>
-    </CartProvider>
+      <FoodDetailModal food={selectedFood} onClose={() => setSelectedFoodId(null)} />
+      <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
+      <FloatingCart onOpen={() => setCartOpen(true)} />
+      <AddressSheet open={addressOpen} onClose={() => setAddressOpen(false)} />
+      <NotificationDrawer open={notificationOpen} onClose={() => { setNotificationOpen(false); setTab("home") }} />
+      <BottomNav active={tab} onChange={changeTab} />
+    </div>
   )
+}
+
+export default function Page() {
+  return <AppProvider><CartProvider><BazarApp /></CartProvider></AppProvider>
 }

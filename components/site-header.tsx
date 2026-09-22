@@ -19,6 +19,9 @@ type Props = {
   onQueryChange: (value: string) => void
   onCartOpen: () => void
   onSelectFood: (id: string) => void
+  onAddressOpen: () => void
+  onNotificationsOpen: () => void
+  onProfileOpen: () => void
 }
 
 export function SiteHeader({
@@ -26,6 +29,9 @@ export function SiteHeader({
   onQueryChange,
   onCartOpen,
   onSelectFood,
+  onAddressOpen,
+  onNotificationsOpen,
+  onProfileOpen,
 }: Props) {
   const { itemCount } = useCart()
   const [focused, setFocused] = useState(false)
@@ -50,17 +56,16 @@ export function SiteHeader({
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3 sm:gap-4 sm:px-6">
         <div className="flex items-center gap-2">
-          <span className="flex size-10 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-sm">
-            <Leaf className="size-5" />
-          </span>
-          <span className="hidden text-lg font-extrabold tracking-tight text-foreground sm:block">
-            Green<span className="text-primary">Bite</span>
+          <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Logo1-removebg-preview-Vk1dAbCzReHymChnhuKw0DrfoCEDSJ.png" alt="Logo Bazar USU" className="size-10 object-contain" />
+          <span className="text-lg font-extrabold tracking-tight text-[#416b3e]">
+            Bazar <span className="text-[#e9ad3d]">USU</span>
           </span>
         </div>
 
         {/* Location selector */}
         <button
           type="button"
+          onClick={onAddressOpen}
           className="hidden shrink-0 items-center gap-2 rounded-2xl border border-border bg-card px-3 py-2 text-left transition-colors hover:border-primary/50 md:flex"
         >
           <MapPin className="size-4 text-primary" />
@@ -137,6 +142,7 @@ export function SiteHeader({
           <button
             type="button"
             aria-label="Notifikasi"
+            onClick={onNotificationsOpen}
             className="relative hidden size-10 items-center justify-center rounded-2xl border border-border bg-card text-foreground transition-colors hover:border-primary/50 sm:flex"
           >
             <Bell className="size-5" />
@@ -158,6 +164,7 @@ export function SiteHeader({
           <button
             type="button"
             aria-label="Profil"
+            onClick={onProfileOpen}
             className="hidden size-10 items-center justify-center overflow-hidden rounded-2xl border border-border bg-card text-foreground transition-colors hover:border-primary/50 sm:flex"
           >
             <User className="size-5" />

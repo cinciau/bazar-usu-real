@@ -3,9 +3,9 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'GreenBite — Pesan Makanan Favoritmu',
+  title: 'Bazar USU — Marketplace Kuliner Mahasiswa',
   description:
-    'GreenBite: aplikasi pesan-antar makanan dengan promo hemat, Mystery Box kejutan, dan Order Bareng Teman. Ayam geprek, kopi susu, dimsum, rendang, dan lainnya.',
+    'Bazar USU: marketplace kuliner mahasiswa untuk menemukan makanan lokal, minuman segar, promo, dan jajanan favorit di sekitar kampus.',
   generator: 'v0.app',
   icons: {
     icon: [

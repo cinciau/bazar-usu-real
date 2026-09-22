@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import { Flame, Minus, Plus, Star, X } from "lucide-react"
+import { Flame, MessageCircle, Minus, Plus, Send, Star, X } from "lucide-react"
 import { type FoodItem, formatIDR } from "@/lib/data"
 import { useCart } from "@/components/cart-provider"
 
@@ -58,6 +58,8 @@ function FoodDetailContent({
     Object.fromEntries(food.variants.map((v) => [v.id, v.options[0].id])),
   )
   const [addOns, setAddOns] = useState<Record<string, boolean>>({})
+  const [chatOpen, setChatOpen] = useState(false)
+  const [message, setMessage] = useState("")
 
   const variantDelta = food.variants.reduce((sum, group) => {
     const opt = group.options.find((o) => o.id === variants[group.id])
@@ -148,6 +150,15 @@ function FoodDetailContent({
         <p className="mt-3 text-pretty text-sm leading-relaxed text-muted-foreground">
           {food.description}
         </p>
+
+        <button type="button" onClick={() => setChatOpen(true)} className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#416b3e] px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-[#355a33]"><MessageCircle className="size-4" /> Chat dengan Penjual</button>
+
+        <section className="mt-5">
+          <h3 className="text-sm font-bold text-foreground">Ulasan Makanan</h3>
+          <div className="mt-2 flex flex-col gap-2">
+            {["⭐⭐⭐⭐⭐ Ayam Gepreknya pedes nampol, porsinya pas!", "⭐⭐⭐⭐ Nasi Rendangnya enak banget, tapi sayang ongkirnya agak mahal.", "⭐⭐⭐⭐⭐ Kopi Gayonya authentic, segar!"].map((review) => <p key={review} className="rounded-2xl bg-muted px-3 py-2.5 text-xs leading-relaxed text-foreground">{review}</p>)}
+          </div>
+        </section>
 
         {/* Variants */}
         {food.variants.map((group) => (
@@ -260,6 +271,8 @@ function FoodDetailContent({
           </fieldset>
         )}
       </div>
+
+      {chatOpen && <div className="absolute inset-0 z-20 flex flex-col bg-card"><div className="flex items-center justify-between border-b border-border px-4 py-4"><div><p className="text-sm font-extrabold text-foreground">Chat dengan Penjual</p><p className="text-xs text-muted-foreground">{food.restaurant}</p></div><button type="button" onClick={() => setChatOpen(false)} aria-label="Tutup chat" className="flex size-8 items-center justify-center rounded-full hover:bg-muted"><X className="size-4" /></button></div><div className="flex-1 space-y-3 overflow-y-auto p-4"><p className="max-w-[80%] rounded-2xl rounded-tl-sm bg-muted px-3 py-2 text-sm text-foreground">Pedesnya level 5 ya?</p><p className="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-primary px-3 py-2 text-sm text-primary-foreground">Siap, kak! Dicatat ya.</p>{message && <p className="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-primary px-3 py-2 text-sm text-primary-foreground">{message}</p>}</div><form onSubmit={(event) => { event.preventDefault(); if (message.trim()) setMessage("") }} className="flex gap-2 border-t border-border p-3"><input value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Tulis pesan..." className="min-w-0 flex-1 rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary" /><button type="submit" aria-label="Kirim pesan" className="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground"><Send className="size-4" /></button></form></div>}
 
       {/* Sticky footer */}
       <div className="shrink-0 border-t border-border bg-card p-4">
