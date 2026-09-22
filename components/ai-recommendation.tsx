@@ -40,7 +40,7 @@ export function AiRecommendation({ foods, onOpen }: Props) {
           <div className="min-w-0 flex-1"><p className="text-xs font-bold uppercase tracking-wider text-[#00a347]">Bazar USU AI</p><h2 className="mt-0.5 text-base font-extrabold text-[#24422c]">Masih bingung mau makan apa?</h2></div>
           <button type="button" onClick={() => setOpen(true)} className="flex shrink-0 items-center gap-1 rounded-xl bg-[#00b14f] px-3 py-2 text-xs font-bold text-white transition hover:bg-[#009f46]">Coba AI <ArrowRight className="size-3.5" /></button>
         </div>
-        <p className="mt-3 text-sm leading-relaxed text-[#55705b]">Jawab tiga pertanyaan singkat, lalu kami pilihkan menu sesuai selera dan budget kamu.</p>
+        <p className="mt-3 text-sm leading-relaxed text-[#55705b]">Coba tanya sama AI kita yuuu!</p>
       </section>
 
       {open && <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-950/40 p-0 sm:items-center sm:p-4"><div className="w-full max-w-md rounded-t-3xl bg-card p-5 shadow-2xl sm:rounded-3xl">
