@@ -16,10 +16,6 @@ export function MysteryBoxBanner() {
         <div className="pointer-events-none absolute -right-6 -top-10 size-40 rounded-full bg-white/10 blur-2xl" />
         <div className="relative flex flex-col items-start gap-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex-1">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
-              <Sparkles className="size-3.5" />
-              Mystery Box
-            </span>
             <h2 className="mt-3 text-balance text-2xl font-extrabold leading-tight sm:text-3xl">
               Bingung mau makan apa?
             </h2>
