@@ -21,8 +21,7 @@ import { UserAvatar } from "@/components/user-avatar"
 import { EditProfileModal } from "@/components/edit-profile-modal"
 
 const menuItems = [
-  { icon: Ticket, label: "Voucher Saya", value: "3 aktif" },
-  { icon: Gift, label: "GreenBite Points", value: "1.240 poin" },
+  { icon: Gift, label: "Pesanan Kamu" },
   { icon: Heart, label: "Restoran Favorit", value: "8 resto" },
   { icon: CreditCard, label: "Metode Pembayaran", value: "GoPay, OVO" },
   { icon: MapPin, label: "Alamat Tersimpan" },
@@ -145,7 +144,7 @@ export function ProfileView() {
       </button>
 
       <p className="mt-4 text-center text-xs text-muted-foreground">
-        GreenBite v1.0 • Dibuat dengan sepenuh hati
+        BazarUSU v1.0 • Dibuat dengan sepenuh hati
       </p>
 
       <EditProfileModal open={editOpen} onClose={() => setEditOpen(false)} />
