@@ -4,7 +4,7 @@ import { useMemo, useState } from "react"
 import { AppProvider, useApp } from "@/components/app-provider"
 import { CartProvider } from "@/components/cart-provider"
 import { SiteHeader } from "@/components/site-header"
-import { MysteryBoxBanner } from "@/components/mystery-box-banner"
+import { AiRecommendation } from "@/components/ai-recommendation"
 import { CategoryPills } from "@/components/category-pills"
 import { FoodGrid } from "@/components/food-grid"
 import { FoodDetailModal } from "@/components/food-detail-modal"
@@ -45,8 +45,8 @@ function BazarApp() {
       <div className="mx-auto max-w-md md:max-w-7xl">
         {tab === "profile" ? <ProfileView /> : (
           <>
-            <button type="button" onClick={() => setAddressOpen(true)} className="mx-4 mt-3 flex items-center gap-2 rounded-xl bg-[#f8eac8] px-3 py-2 text-left text-xs font-semibold text-[#416b3e] md:hidden">📍 Antar ke: <span className="truncate">{activeAddress.detail}</span></button>
-            {!query.trim() && activeCategory === "all" && <MysteryBoxBanner />}
+            <button type="button" onClick={() => setAddressOpen(true)} className="mx-4 mt-3 flex items-center gap-2 rounded-xl bg-[#f8eac8] px-3 py-2 text-left text-xs font-semibold text-[#416b3e] md:hidden"><span aria-hidden="true">●</span> Antar ke: <span className="truncate">{activeAddress.detail}</span></button>
+            {!query.trim() && activeCategory === "all" && <AiRecommendation foods={foods} onOpen={setSelectedFoodId} />}
             <CategoryPills active={activeCategory} onChange={setActiveCategory} />
             <FoodGrid foods={filtered} heading={heading} onOpen={setSelectedFoodId} />
           </>
